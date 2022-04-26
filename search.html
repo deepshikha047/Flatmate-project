@@ -1,0 +1,252 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>FlatMateNew</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&amp;display=swap">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="assets/alertifyjs/alertify.min.js "></script>
+    <link rel="stylesheet" href="assets/alertifyjs/css/alertify.min.css" />
+    <link rel="stylesheet" href="assets/alertifyjs/css/themes/default.min.css" />
+
+    <script src="assets/js/angular.min.js"></script>
+    <script src="assets/js/angular-sanitize.min.js"></script>
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('customersCtrl', function ($scope, $http, $location) {
+            $scope.Title = $scope.Mobile = $scope.Address = $scope.City = ''; $scope.Cost = $scope.Capacity = 0;
+            $scope.UserGender = 'M'; $scope.SelectedCity = 'Lucknow';
+            $scope.Cities = ['Delhi', 'Mumbai', 'Banglore', 'Chennai', 'NCR', 'Kolkata', 'Lucknow', 'Kanpur'];
+            $scope.Hobbies = ['Studious', 'NightOwl', 'MusicLover', 'PetOwner', 'Smoking', 'Sporty', 'Alchoholic', 'PartyAnimal', 'Religious', 'EarlyBird', 'FitnessFreak', 'Wanderer', 'Vegan'];
+            $scope.Ads = $scope.Users = [];
+            $scope.SelectedHobbies = [];
+            $scope.SearchingFor = 'RoomMates';
+            $scope.RangeValue = 0;
+            $scope.AgeValue = 30;
+            $scope.MaritialStatus = "Single";
+            $scope.QueryStringToJSON = function () {
+                var pairs = location.search.slice(1).split('&');
+
+                var result = {};
+                pairs.forEach(function (pair) {
+                    pair = pair.split('=');
+                    result[pair[0]] = decodeURIComponent(pair[1] || '');
+                });
+
+                return JSON.parse(JSON.stringify(result));
+            }
+            $scope.QueryStringOb = $scope.QueryStringToJSON();
+            
+            if ($scope.QueryStringOb.city != null) {  $scope.City = $scope.SelectedCity = $scope.QueryStringOb.city; }
+
+            $http.get("assets/api/GetAds.php?City=" + $scope.City).then(function (response) { $scope.Ads = response.data; });
+
+
+
+            $scope.SelectCity = function (City) {
+                $scope.Males = $scope.Females = 0;
+                $scope.SelectedCity = City; $('#myModal').modal('hide');
+                $http.get("assets/api/GetUsers.php?City=" + City).then(function (response) {
+                    $scope.Users = response.data;
+                    console.log(response.data);
+                    for (var n = 0; n < $scope.Users.length; n++) {
+                        $scope.Users[n].Show = true;
+                        
+                         //$scope.Users[n].Hobbies = $scope.Users[n].Hobbies.split(",");
+
+
+                        if ($scope.Users[n].Gender == 'M') { $scope.Males++; } else { $scope.Females++; }
+                    }
+                    $scope.FilterUsersAsHobbies();
+                });
+                
+            }
+            $scope.SelectCity($scope.SelectedCity);
+
+            $scope.FilterUsersAsHobbies = function () {
+                $scope.Males = $scope.Females = 0;
+                for (var n = 0; n < $scope.Users.length; n++) {
+                   
+                    var show = true;
+                    for (var i = 0; i < $scope.SelectedHobbies.length; i++) {
+                        
+                        if (!$scope.Users[n].Hobbies.includes($scope.SelectedHobbies[i]))
+                        {
+                            show = false; break;
+                        }
+                       
+                    } $scope.Users[n].Show = show;
+                    if ($scope.Users[n].Gender == 'M') { $scope.Males++; } else { $scope.Females++; }
+
+                }
+            }
+          
+            $scope.SetGender = function (Gender) { $scope.UserGender = Gender; }
+            $scope.SelectHobby = function (Hobby) {
+                if (!$scope.SelectedHobbies.includes(Hobby)) {
+                    $scope.SelectedHobbies.push(Hobby);
+                   
+                } else { $scope.SelectedHobbies.splice($scope.SelectedHobbies.indexOf(Hobby), 1); }
+                $scope.FilterUsersAsHobbies();
+            }
+            $scope.SetSearchingFor = function (SearchingFor) {$scope.SearchingFor = SearchingFor; }
+            $scope.Transition = function (Page) {
+                //$('#Body').fadeOut('fast', 'swing', function () { });
+                location.assign(Page);
+            }
+            $scope.SetMaritialStatus = function (Status) {
+                $scope.MaritialStatus = Status;
+            }
+
+            
+
+
+        });
+        function SetErrorImage(ob) {
+            ob.src = "assets/img/avatar_2x.png";
+        }
+
+
+        function Load() {
+            $('#Body').attr('hidden', false);
+            $('#Body').fadeIn('fast', 'swing', function () { });
+        }
+        function Transition(Page) {location.assign(Page);}
+
+    </script>
+</head>
+
+<body ng-app="myApp" ng-controller="customersCtrl" id="Body" style="font-size: 14px;">
+    <div ng-include src="'menu.php'"></div>
+    <div class="container" style="margin-top: 20px;">
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-dark shadow d-flex" role="alert">
+                    <span class="d-xl-flex flex-fill justify-content-xl-start align-items-xl-center"><i class="fa fa-map-marker"></i><strong>&nbsp;Selected City [ {{SelectedCity}} ]</strong></span>
+                    <div>
+                        <a class="btn btn-dark btn-sm" role="button" data-toggle="modal" data-target="#myModal"><i class="fa fa-align-justify"></i></a>
+                        <div role="dialog" tabindex="-1" class="modal fade show" id="myModal">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4>Select City</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    </div>
+                                    <ul style="cursor:pointer;" class="list-group" ng-repeat="City in Cities">
+                                        <li ng-class="SelectedCity==City?'bg-info':''" class="list-group-item" ng-click="SelectCity(City)"><span>{{City}}</span></li>
+                                        
+                                    </ul>
+                                    <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container" style="margin-top: 20px;">
+        <div class="row">
+            <div class="col-md-4 col-lg-4 col-xl-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-danger">
+                        <h5 class="text-white mb-0">Filters</h5>
+                    </div>
+                    <div style="cursor:pointer" class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr class="text-center">
+                                    <th style="width: 50%;" ng-click="SetGender('M');" ng-class="UserGender=='M'?'bg-info text-white':''"><i class="fa fa-male"></i>&nbsp;Male ( {{Males}} )</th>
+                                    <th ng-click="SetGender('F');" ng-class="UserGender=='F'?'bg-info text-white':''"><i class="fa fa-female"></i>&nbsp;Female ( {{Females}} )</th>
+                                </tr>
+                                <tr class="text-center">
+                                    <th style="width: 50%;" ng-click="SetMaritialStatus('Single');" ng-class="MaritialStatus=='Single'?'bg-info text-white':''">Single</th>
+                                    <th ng-click="SetMaritialStatus('Married');" ng-class="MaritialStatus=='Married'?'bg-info text-white':''">Married</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-class="SearchingFor=='Rooms'?'bg-info text-white':''" ng-click="SetSearchingFor('Rooms')"><td colspan="5"><i class="fa fa-home"></i>&nbsp;Looking For Room</td></tr>
+                                <tr ng-class="SearchingFor=='RoomMates'?'bg-info text-white':''" ng-click="SetSearchingFor('RoomMates')"><td colspan="5"><i class="fa fa-user"></i>&nbsp;Looking For Room Mate</td></tr>
+
+                               
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card shadow-sm mt-2">
+                    <div class="card-body">
+                        <h5 class="card-title">Range : 0 - {{RangeValue}}</h5><input type="range" ng-model="RangeValue" class="custom-range"  min="0" max="20000" step="100" />
+                        <p class="d-xl-flex align-items-xl-center"><span class="flex-fill">0</span><span>20000</span></p>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mt-2">
+                    <div class="card-body">
+                        <h5 class="card-title">Age Criteria : 10 - {{AgeValue}}</h5><input type="range" ng-model="AgeValue" class="custom-range"  min="10" max="70" step="1" />
+                        <p class="d-xl-flex align-items-xl-center"><span class="flex-fill">10</span><span>70</span></p>
+                    </div>
+                </div>
+
+                <ul class="list-group shadow-sm" style="margin-top: 16px;">
+                    <li ng-show="SearchingFor=='RoomMates'" ng-repeat="Hobby in Hobbies" ng-class="SelectedHobbies.includes(Hobby)?'list-group-item-dark':''" ng-click="SelectHobby(Hobby)" class="list-group-item list-group-item-action"><span>{{Hobby}}</span></li>
+                    
+                </ul>
+            </div>
+           
+            <div class="col" ng-show="SearchingFor=='RoomMates'">
+                <div ng-show="Users.length == 0">
+                    <h4 class="text-warning"><strong>No Record Found !!!</strong></h4>
+                    <hr style="margin-bottom: 6px;">
+                    <p class="text-warning">No data to Display . Try Other Filters</p>
+                </div>
+                <ul ng-show="Users.length > 0" class="list-group shadow-sm" style="font-size: 14px;">
+                    <li class="list-group-item shadow" ng-repeat="User in Users | filter : { Gender : UserGender }" ng-show="User.Show && User.Contribution>=RangeValue && User.Age <=AgeValue && User.MaritialStatus==MaritialStatus">
+                        <div class="d-flex" style="cursor:pointer" ng-click="Transition('profile.html?UID='+User.UID)">
+                            <div class="media">
+                                <img  class="mr-3" style="max-height:200px" onerror="SetErrorImage(this)" ng-src="{{'assets/img/users/' + User.UID + '.jpg'}}">
+                                
+
+                                <div class="media-body flex-fill">
+                                    <h5 ng-class="UserGender=='M'?'text-primary':'text-warning'">{{User.UserName}} [ {{User.Age}} ]</h5>
+                                    <p ng-show="User.Address.length>0"><i class="fa fa-map-marker"></i>&nbsp;{{User.Address}}</p>
+                                    <p><i class="fa fa-rupee"></i>&nbsp;{{User.Contribution}}/-</p>
+                                    <hr />
+                                    <div class="d-xl-flex flex-wrap align-items-xl-center">
+                                        <h6 ng-repeat="Hobby in User.Hobbies.split(',')" class="text-white bg-danger" style="padding: 10px;border-radius: 23px;margin:5px;"><i class="fa fa-check"></i> {{Hobby}}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col" ng-show="SearchingFor=='Rooms'">
+                <div ng-show="Users.length == 0">
+                    <h4 class="text-warning"><strong>No Record Found !!!</strong></h4>
+                    <hr style="margin-bottom: 6px;">
+                    <p class="text-warning">No data to Display . Try Other Filters</p>
+                </div>
+                <ul ng-show="Users.length > 0" class="list-group shadow-sm" style="font-size: 14px;">
+                    <li class="list-group-item shadow" ng-repeat="Ad in Ads" ng-show="Ad.Cost>=RangeValue">
+                        <div class="d-flex" style="cursor:pointer" ng-click="Transition('adinfo.php?AID='+Ad.AID)">
+                            <div class="media">
+                                <img class="mr-3" height="80" width="80" src="assets/img/home.png">
+                                <div class="media-body flex-fill">
+                                    <h5>{{Ad.Title}}</h5>
+                                    <p><i class="fa fa-map-marker"></i>&nbsp;{{Ad.Address}}</p>
+                                </div>
+                            </div><span class="text-right d-xl-flex flex-fill align-self-end justify-content-xl-end align-items-xl-center"><i class="fa fa-rupee"></i>&nbsp;{{Ad.Cost}}/-</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+</html>

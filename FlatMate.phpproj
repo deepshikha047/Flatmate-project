@@ -1,0 +1,148 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Name>FlatMate</Name>
+    <ProjectGuid>{ee6c43fb-9cf1-4f55-8cf0-56e8528e49e2}</ProjectGuid>
+    <RootNamespace>
+    </RootNamespace>
+    <OutputType>Library</OutputType>
+    <ProjectTypeGuids>{A0786B88-2ADB-4C21-ABE8-AA2D79766269}</ProjectTypeGuids>
+    <RuntimeVersion>7.1</RuntimeVersion>
+    <SpecificPageValue>assets/api/GetAds.php</SpecificPageValue>
+    <StartAction>SpecificPage</StartAction>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <IncludeDebugInformation>false</IncludeDebugInformation>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="about.php" />
+    <Compile Include="adinfo.php" />
+    <Compile Include="assets\api\DeleteAd.php" />
+    <Compile Include="assets\api\FileApi.php" />
+    <Compile Include="assets\api\GetAds.php" />
+    <Compile Include="assets\api\GetInterestedUsers.php" />
+    <Compile Include="assets\api\ToggleActivation.php" />
+    <Compile Include="assets\api\GetUserApi.php" />
+    <Compile Include="assets\api\GetUserInterests.php" />
+    <Compile Include="assets\api\GetUsers.php" />
+    <Compile Include="assets\api\LoginApi.php" />
+    <Compile Include="assets\api\SaveAd.php" />
+    <Compile Include="assets\api\SessionApi.php" />
+    <Compile Include="assets\api\SetInterest.php" />
+    <Compile Include="assets\api\SignUpApi.php" />
+    <Compile Include="assets\api\UpdateUserInterestApi.php" />
+    <Compile Include="assets\api\UserApi.php" />
+    <Compile Include="assets\Database\DBMySql.php" />
+    <Compile Include="assets\phpscript\ActivateProfile.php" />
+    <Compile Include="assets\phpscript\AddStudent.php" />
+    <Compile Include="assets\phpscript\FormatedOutput.php" />
+    <Compile Include="assets\phpscript\GetMockTestsForStudents.php" />
+    <Compile Include="assets\phpscript\GetQuestions.php" />
+    <Compile Include="assets\phpscript\GetRequests.php" />
+    <Compile Include="assets\phpscript\GetResults.php" />
+    <Compile Include="assets\phpscript\Logout.php" />
+    <Compile Include="assets\phpscript\UpdateRequestStatus.php" />
+    <Compile Include="assets\phpscript\UploadLocation.php" />
+    <Compile Include="index.php" />
+    <Compile Include="menu.php" />
+    <Compile Include="signup.php" />
+    <Compile Include="test.php" />
+    <Compile Include="testapi.php" />
+    <Compile Include="UploadProfileImage.php" />
+    <Compile Include="uploadfile.php" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ads.html" />
+    <Content Include="assets\alertifyjs\alertify.js" />
+    <Content Include="assets\alertifyjs\alertify.min.js" />
+    <Content Include="assets\alertifyjs\css\alertify.css" />
+    <Content Include="assets\alertifyjs\css\alertify.min.css" />
+    <Content Include="assets\alertifyjs\css\alertify.rtl.css" />
+    <Content Include="assets\alertifyjs\css\alertify.rtl.min.css" />
+    <Content Include="assets\alertifyjs\css\themes\bootstrap.css" />
+    <Content Include="assets\alertifyjs\css\themes\bootstrap.min.css" />
+    <Content Include="assets\alertifyjs\css\themes\bootstrap.rtl.css" />
+    <Content Include="assets\alertifyjs\css\themes\bootstrap.rtl.min.css" />
+    <Content Include="assets\alertifyjs\css\themes\default.css" />
+    <Content Include="assets\alertifyjs\css\themes\default.min.css" />
+    <Content Include="assets\alertifyjs\css\themes\default.rtl.css" />
+    <Content Include="assets\alertifyjs\css\themes\default.rtl.min.css" />
+    <Content Include="assets\alertifyjs\css\themes\semantic.css" />
+    <Content Include="assets\alertifyjs\css\themes\semantic.min.css" />
+    <Content Include="assets\alertifyjs\css\themes\semantic.rtl.css" />
+    <Content Include="assets\alertifyjs\css\themes\semantic.rtl.min.css" />
+    <Content Include="assets\api\Trips.txt" />
+    <Content Include="assets\bootstrap\css\bootstrap.min.css" />
+    <Content Include="assets\bootstrap\js\bootstrap.min.js" />
+    <Content Include="assets\css\Carousel-Hero.css" />
+    <Content Include="assets\css\Footer-Basic.css" />
+    <Content Include="assets\css\Google-Style-Login.css" />
+    <Content Include="assets\css\Hero-Technology.css" />
+    <Content Include="assets\css\Lightbox-Gallery.css" />
+    <Content Include="assets\css\styles.css" />
+    <Content Include="assets\fonts\font-awesome.min.css" />
+    <Content Include="assets\fonts\fontawesome-webfont.eot" />
+    <Content Include="assets\fonts\fontawesome-webfont.svg" />
+    <Content Include="assets\fonts\fontawesome-webfont.ttf" />
+    <Content Include="assets\fonts\fontawesome-webfont.woff" />
+    <Content Include="assets\fonts\fontawesome-webfont.woff2" />
+    <Content Include="assets\fonts\FontAwesome.otf" />
+    <Content Include="assets\fonts\ionicons.eot" />
+    <Content Include="assets\fonts\ionicons.min.css" />
+    <Content Include="assets\fonts\ionicons.svg" />
+    <Content Include="assets\fonts\ionicons.ttf" />
+    <Content Include="assets\fonts\ionicons.woff" />
+    <Content Include="assets\img\add_female_user.png" />
+    <Content Include="assets\img\ads\1\building.jpg" />
+    <Content Include="assets\img\ads\1\desk - Copy %282%29.jpg" />
+    <Content Include="assets\img\ads\1\loft.jpg" />
+    <Content Include="assets\img\ads\6096da2ee97ec.jpg" />
+    <Content Include="assets\img\avatar_2x.png" />
+    <Content Include="assets\img\bangalore.jpg" />
+    <Content Include="assets\img\building.jpg" />
+    <Content Include="assets\img\delhi.jpg" />
+    <Content Include="assets\img\desk.jpg" />
+    <Content Include="assets\img\female_male_users.png" />
+    <Content Include="assets\img\female_user.png" />
+    <Content Include="assets\img\hero-background-nature.jpg" />
+    <Content Include="assets\img\hero-background-photography.jpg" />
+    <Content Include="assets\img\hero-background-technology.jpg" />
+    <Content Include="assets\img\home.png" />
+    <Content Include="assets\img\kanpur.jpg" />
+    <Content Include="assets\img\loft.jpg" />
+    <Content Include="assets\img\male_user.png" />
+    <Content Include="assets\img\mumbai.jpg" />
+    <Content Include="assets\img\Noida1.jpeg" />
+    <Content Include="assets\img\users\1.jpg" />
+    <Content Include="assets\js\angular-sanitize.min.js" />
+    <Content Include="assets\js\angular.min.js" />
+    <Content Include="assets\js\jquery.min.js" />
+    <Content Include="login.html" />
+    <Content Include="myprofile.html" />
+    <Content Include="profile.html" />
+    <Content Include="search.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="assets\" />
+    <Folder Include="assets\alertifyjs\" />
+    <Folder Include="assets\alertifyjs\css\" />
+    <Folder Include="assets\alertifyjs\css\themes\" />
+    <Folder Include="assets\api\" />
+    <Folder Include="assets\bootstrap\" />
+    <Folder Include="assets\bootstrap\css\" />
+    <Folder Include="assets\bootstrap\js\" />
+    <Folder Include="assets\css\" />
+    <Folder Include="assets\Database\" />
+    <Folder Include="assets\fonts\" />
+    <Folder Include="assets\img\" />
+    <Folder Include="assets\img\ads\" />
+    <Folder Include="assets\img\ads\1\" />
+    <Folder Include="assets\img\users\" />
+    <Folder Include="assets\js\" />
+    <Folder Include="assets\phpscript\" />
+    <Folder Include="Properties\" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,201 @@
+﻿
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta charset="utf-8">
+    <title>FlatMateNew</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="assets/css/Google-Style-Login.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="assets/alertifyjs/alertify.min.js "></script>
+    <link rel="stylesheet" href="assets/alertifyjs/css/alertify.min.css" />
+    <link rel="stylesheet" href="assets/alertifyjs/css/themes/default.min.css" />
+
+    <script src="assets/js/angular.min.js"></script>
+    <script src="assets/js/angular-sanitize.min.js"></script>
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('customersCtrl', function ($scope, $http, $location) {
+            $scope.Index = null;
+            $scope.Mobile = '';
+
+            $scope.Ads = [];
+            $scope.Ad = {AID:0};
+            $scope.AID = 0;
+            $http.get("assets/api/GetAds.php").then(function (response) {
+                $scope.Ads = response.data;
+                console.log($scope.Ads);
+            });
+
+            $scope.Save = function () {
+                
+                
+                $http.get("assets/api/SaveAd.php?AID=" + $scope.Ad.AID + "&Title=" + $scope.Ad.Title + "&City=" + $scope.Ad.City + "&Address=" + $scope.Ad.Address + "&AC=" + $scope.Ad.AC + "&Geaser=" + $scope.Ad.Geaser + "&RoomType=" + $scope.Ad.RoomType + "&Mobile=" + $scope.Ad.Mobile + "&Cost=" + $scope.Ad.Cost + "&Capacity=" + $scope.Ad.Capacity).then(function (response) {
+                    console.log("assets/api/SaveAd.php?AID=" + $scope.Ad.AID + "&Title=" + $scope.Ad.Title + "&City=" + $scope.Ad.City + "&Address=" + $scope.Ad.Address + "&AC=" + $scope.Ad.AC + "&Geaser=" + $scope.Ad.Geaser + "&RoomType=" + $scope.Ad.RoomType + "&Mobile=" + $scope.Ad.Mobile + "&Cost=" + $scope.Ad.Cost + "&Capacity=" + $scope.Ad.Capacity);
+                    //return;
+                    alertify.success(response.data.Message);
+                   
+                    $http.get("assets/api/GetAds.php").then(function (response) {$scope.Ads = response.data;});
+                    $('#myModal').modal('hide');
+                });
+
+            }
+            $scope.SetToEdit = function (Ad, Index) {
+                $scope.Ad = JSON.parse(JSON.stringify(Ad));
+                console.log($scope.Ad);
+                $scope.Index = Index;
+               
+            }
+            $scope.New = function ()
+            {
+                $scope.Ad = { AID:0};
+                //$scope.Index = Index;
+               
+            }
+            $scope.Delete = function (AID,Index) {
+                alertify.confirm('Confirm Operation !!!', 'Are you Sure want to delete ? ', function () {
+                    $http.get("assets/api/DeleteAd.php?Delete=" + AID).then(function (response) {
+                        if (response.data.Status == 'Success') {
+                            $scope.Ads.splice(Index, 1);
+                            alertify.error("Ad Deleted Successfully");
+                            
+                        }
+                    });
+                }, function () { });
+            }
+
+
+        });
+
+        function Load() {
+            $('#Body').attr('hidden', false);
+            $('#Body').fadeIn('fast', 'swing', function () { });
+        }
+        function Transition(Page) {
+
+            location.assign(Page);
+
+        }
+
+    </script>
+</head>
+
+<body ng-app="myApp" onload="Load()" ng-controller="customersCtrl" id="Body" style="font-size: 14px;">
+    
+    <div ng-include="'menu.php'" ></div>
+    <div class="container" style="margin-top: 20px;">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex">
+                <h5 class="text-primary d-xl-flex flex-fill justify-content-xl-start align-items-xl-center mb-0">Ads</h5>
+                <div>
+                    <a class="btn btn-primary btn-sm" role="button" data-toggle="modal" ng-click="New()" data-target="#myModal">New ad</a>
+                    
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 61px;">Sn.</th>
+                            <th>Title</th>
+                            <th>Mobile</th>
+                            <th>Address</th>
+                           <th>AC</th>
+                            <th>Geaser</th>
+                            <th style="width: 133px;">RoomType</th>
+                            <th class="text-right" style="width: 112px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="Ad in Ads">
+                            <td>{{$index+1}}</td>
+                            <td><a href="adinfo.php?AID={{Ad.AID}}">{{Ad.Title}}</a></td>
+                             <td>{{Ad.Mobile}}</td>
+                            <td>{{Ad.Address}}</td>
+                           <td>{{Ad.AC}}</td>
+                            <td>{{Ad.Geaser}}</td>
+                            <td>{{Ad.RoomType}}</td>
+                            <td class="text-right">
+                                <div class="btn-group" role="group">
+                                    <a class="btn btn-info" data-toggle="modal" ng-click="SetToEdit(Ad,$index)" data-target="#myModal">Edit</a>
+                                    <button class="btn btn-primary" ng-click="Delete(Ad.AID,$index)" type="button">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="myModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Edit Info</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group"><label>City</label><select class="form-control" ng-model="Ad.City"><option ng-repeat="City in ['Delhi','Lucknow','Kanpur','Jaypur','Noida','Gurgaon']">{{City}}</option></select></div>
+                        
+                         <div class="form-row">
+                                <div class="col">
+                                    <div class="form-group"><label>Title</label><input class="form-control" ng-model="Ad.Title" name="Title" type="text"></div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group"><label>RoomType</label>
+                                    
+                                    <select class="form-control" ng-model="Ad.RoomType" name="Title" type="text">
+                                        <option ng-repeat="x in ['Private','Sharing']">{{x}}</option>
+                                    </select>
+                                        </div>
+                                </div>
+
+                             </div>
+                        <div class="form-row">
+                                <div class="col">
+                                    <div class="form-group"><label>AC</label>
+                                    <select class="form-control" ng-model="Ad.AC" name="Title" type="text">
+                                        <option ng-repeat="x in ['Yes','No']">{{x}}</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group"><label>Geaser</label>
+                                    
+                                    <select class="form-control" ng-model="Ad.Geaser" name="Title" type="text">
+                                        <option ng-repeat="x in ['Yes','No']">{{x}}</option>
+                                    </select>
+                                        </div>
+                                </div>
+
+                             </div>
+                        
+                        <div class="form-group">
+                            <div class="form-row">
+                                <div class="col">
+                                    <div class="form-group"><label>Mobile</label><input class="form-control" type="text"  maxlength="10" ng-model="Ad.Mobile" name="Mobile"></div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group"><label>Capacity</label><input type="text" class="form-control" name="Capacity" ng-model ="Ad.Capacity"  /></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group"><label>Address for reallocation&nbsp; [ Area - Pincode ]</label><textarea class="form-control" name="Address" ng-model="Ad.Address"></textarea></div>
+                        <div class="form-group"><label>Set Rental Cost</label><input class="form-control" type="text" ng-model="Ad.Cost" name="Cost"></div>
+                    </form>
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-primary" ng-disabled="Ad.Title=='' || Ad.Mobile=='' || Ad.Address=='' || Ad.City==''|| Ad.Capacity < 1 || Ad.Cost<=0"  ng-click="Save()" type="button">Save</button></div>
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>
